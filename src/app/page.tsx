@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // 定义患者类型
 interface Patient {
@@ -11,6 +12,7 @@ interface Patient {
 
 const HomePage = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const router = useRouter();
 
   // 获取患者数据
   useEffect(() => {
@@ -31,6 +33,10 @@ const HomePage = () => {
     fetchPatients();
   }, []);
 
+  const handlePatientClick = (patientId: string) => {
+    router.push(`/pages/comments/${patientId}`);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 gap-4">
@@ -38,6 +44,7 @@ const HomePage = () => {
           <div
             key={patient.id}
             className="flex justify-between items-center bg-white shadow-md p-4 rounded-md hover:bg-gray-100 cursor-pointer"
+            onClick={() => handlePatientClick(patient.id)}
           >
             <h2 className="text-xl font-semibold flex items-center">
               <span className="mr-2">👤</span>
