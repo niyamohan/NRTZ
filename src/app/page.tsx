@@ -1,3 +1,4 @@
+import "../styles/globals.css"
 export default function Page() {
     return (
       <div className="bg-gray-200 min-h-screen flex items-center justify-center">
