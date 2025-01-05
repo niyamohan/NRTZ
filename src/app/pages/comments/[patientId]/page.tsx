@@ -15,32 +15,47 @@ interface Comment {
 const currentAccount = "Account 1"; // 当前操作账户
 
 const CommentPage = () => {
-  const [comments, setComments] = useState<Comment[]>([]);
+    // mock data
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      id: '1',
+      content: '1111111',
+      author: '1',
+      updatedAt: '2024-12-12',
+    },
+    {
+      id: '2',
+      content: '222222',
+      author: '3',
+      updatedAt: '2024-12-12',
+    }
+  ]);
   const [newComment, setNewComment] = useState<string>("");
-  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>('1');
   const [editingContent, setEditingContent] = useState<string>("");
   const params = useParams();
   const router = useRouter();
   const { patientId } = params || {};
 
   // 获取评论数据
-  useEffect(() => {
-    async function fetchComments() {
-      try {
-        const response = await fetch(`/api/comments/${patientId}`);
-        if (response.ok) {
-          const data: Comment[] = await response.json();
-          setComments(data);
-        } else {
-          console.error("Failed to fetch comments");
-        }
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchComments() {
+  //     try {
+  //       const response = await fetch(`/api/comments/${patientId}`);
+  //       if (response.ok) {
+  //         const data: Comment[] = await response.json();
+  //         setComments(data);
+  //       } else {
+  //         console.error("Failed to fetch comments");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching comments:", error);
+  //     }
+  //   }
 
-    fetchComments();
-  }, [patientId]);
+  //   fetchComments();
+  // }, [patientId]);
+
 
   // 删除评论
   const handleDeleteComment = async (commentId: string) => {
