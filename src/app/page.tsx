@@ -1,12 +1,12 @@
 "use client";
 
 import Header from "@/components/Header/Header";
-import PatientPage from "@/app/pages/patients/PatientPage";
+import PatientsPage from "@/app/pages/patients/PatientsPage";
 
 const HomePage = () => (
   <div className="container mx-auto p-4">
     <Header />
-    <PatientPage />
+    <PatientsPage />
   </div>
 );
 

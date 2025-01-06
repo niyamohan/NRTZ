@@ -10,6 +10,8 @@ const usePatients = () => {
     async function fetchPatients() {
       try {
         const response = await fetch("/api/patients/getPatients");
+        console.log(response);
+        
         if (response.ok) {
           const data: Patient[] = await response.json();
           setPatients(data);

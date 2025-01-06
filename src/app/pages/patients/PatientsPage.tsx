@@ -1,23 +1,27 @@
+// src/app/pages/patients/index.tsx (或者 PatientsPage.tsx)
+
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";  // 使用 next/navigation 的 useRouter
 import usePatients from "@/hooks/usePatients";  // 引入自定义 Hook
 
-const PatientPage = () => {
+const PatientsPage = () => {
   const { patients, loading, error } = usePatients();  // 获取患者数据
   const router = useRouter();
 
+  // 跳转到患者详情页
   const handlePatientClick = (patientId: number) => {
-    router.push(`/pages/comments/${patientId}`);
+    router.push(`/pages/patients/${patientId}`); // 路径指向动态路由
   };
+
 
   // 渲染加载状态
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>加载中...</div>;
   }
 
   // 渲染错误状态
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>错误: {error}</div>;
   }
 
   return (
@@ -26,7 +30,7 @@ const PatientPage = () => {
         <div
           key={patient.id}
           className="flex justify-between items-center bg-white shadow-md p-4 rounded-md hover:bg-gray-100 cursor-pointer"
-          onClick={() => handlePatientClick(patient.id)}
+          onClick={() => handlePatientClick(patient.id)}  // 点击跳转到患者详情
         >
           <h2 className="text-xl font-semibold flex items-center">
             <span className="mr-2">👤</span>
@@ -39,4 +43,4 @@ const PatientPage = () => {
   );
 };
 
-export default PatientPage;
+export default PatientsPage;
