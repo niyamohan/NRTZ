@@ -2,15 +2,15 @@
     "accounts": [
       {
         "id": 1,
-        "name": "account1"
+        "name": "Account1"
       },
       {
         "id": 2,
-        "name": "account2"
+        "name": "Account2"
       },
       {
         "id": 3,
-        "name": "account3"
+        "name": "Account3"
       }
     ],
     "patients": [

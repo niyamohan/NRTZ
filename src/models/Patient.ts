@@ -10,3 +10,5 @@ export const PatientSchema = z.object({
 export const PatientDetailsPropsSchema = z.object({
   patientId: z.string(), // 患者 ID，字符串类型
 });
+
+export type Patient = z.infer<typeof PatientSchema>;

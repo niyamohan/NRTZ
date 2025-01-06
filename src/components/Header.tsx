@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
-// 账户类型定义
-interface Account {
-  id: string;
-  name: string;
-}
+import { Account } from "../models/Account";
 
 const Header: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]); // 存储账户列表
@@ -17,7 +12,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     async function fetchAccounts() {
       try {
-        const response = await fetch("/api/accounts");
+        const response = await fetch("/api/accounts/getAccounts");
         if (!response.ok) throw new Error("Failed to fetch accounts");
         const data: Account[] = await response.json();
         setAccounts(data);

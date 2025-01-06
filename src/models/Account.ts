@@ -18,3 +18,5 @@ export const AccountSelectorPropsSchema = z.object({
   currentAccount: AccountSchema.nullable(), // 当前账户，可能为 null
   onChange: z.function().args(AccountSchema).returns(z.promise(z.void())), // 账户变化时触发的回调函数，接受一个账户对象并返回 Promise
 });
+
+export type Account = z.infer<typeof AccountSchema>;

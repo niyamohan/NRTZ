@@ -49,3 +49,5 @@ export const DeleteCommentSchema = z.object({
 
 // 用于数据库的评论 Schema
 export const CommentsSchema = z.array(CommentSchema); // 评论的数组，数组中的每个元素是 CommentSchema 类型
+
+export type Comment = z.infer<typeof CommentSchema>;

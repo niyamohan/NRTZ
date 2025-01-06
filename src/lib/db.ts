@@ -42,7 +42,7 @@ function loadMockData() {
 loadMockData();
 
 // モックDBの操作
-export const db = {
+export const fakeDb = {
   // アカウントを取得する
   getAccounts: () => allBasicSchemasData.accounts,
 
