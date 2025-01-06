@@ -3,8 +3,22 @@
 
 import React, { useState } from 'react';
 import { CommentCardProps } from '@/models/Comment'; // 引入 CommentCardProps 类型
+import { RootState } from '@/redux/store/store';
+import { useSelector } from 'react-redux';
 
 const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, editComment, refreshComments }: CommentCardProps) => {
+
+  // 获取选中的账户
+  const selectedAccount = useSelector((state: RootState) => state.account.selectedAccount);
+
+  // 判断当前评论的账户 ID 是否与 Redux 中选中的账户 ID 相同
+  const isOwnComment = selectedAccount?.name === comment.accountName;
+
+  console.log(selectedAccount?.name);
+  
+  console.log(comment);
+  
+
   const [isEditing, setIsEditing] = useState(isEditingFlag);
   const [content, setContent] = useState(comment.content);
 
@@ -36,6 +50,7 @@ const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, edit
       </div>
       <div className="text-sm text-gray-500">{comment.updatedAt}</div>
 
+
       {isEditing ? (
         <div>
           <textarea
@@ -53,8 +68,14 @@ const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, edit
           </div>
         </div>
       ) : (
-        <p className="text-gray-700" onClick={() => setIsEditing(true)}>{comment.content}</p>
+        <p
+          className="text-gray-700 cursor-pointer"
+          onClick={() => isOwnComment && setIsEditing(true)} // 只有评论的拥有者可以编辑
+        >
+          {comment.content}
+        </p>
       )}
+
 
       <div className="flex justify-end">
         <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-1 text-sm rounded-md">
