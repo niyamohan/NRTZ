@@ -49,11 +49,3 @@ export const DeleteCommentSchema = z.object({
 
 // 用于数据库的评论 Schema
 export const CommentsSchema = z.array(CommentSchema); // 评论的数组，数组中的每个元素是 CommentSchema 类型
-
-// 类型推导（interface）
-export interface Comment extends z.infer<typeof CommentSchema> {} // 从 CommentSchema 推导出的 Comment 类型
-export interface NewComment extends z.infer<typeof NewCommentSchema> {} // 从 NewCommentSchema 推导出的 NewComment 类型
-export interface CommentCardProps extends z.infer<typeof CommentCardPropsSchema> {} // 从 CommentCardPropsSchema 推导出的 CommentCardProps 类型
-export interface CommentListProps extends z.infer<typeof CommentListPropsSchema> {} // 从 CommentListPropsSchema 推导出的 CommentListProps 类型
-export interface EditComment extends z.infer<typeof EditCommentSchema> {} // 从 EditCommentSchema 推导出的 EditComment 类型
-export interface DeleteComment extends z.infer<typeof DeleteCommentSchema> {} // 从 DeleteCommentSchema 推导出的 DeleteComment 类型

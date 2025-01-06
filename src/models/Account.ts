@@ -18,8 +18,3 @@ export const AccountSelectorPropsSchema = z.object({
   currentAccount: AccountSchema.nullable(), // 当前账户，可能为 null
   onChange: z.function().args(AccountSchema).returns(z.promise(z.void())), // 账户变化时触发的回调函数，接受一个账户对象并返回 Promise
 });
-
-// 使用 Zod 类型推导生成接口
-export interface Account extends z.infer<typeof AccountSchema> {} // 推导出 Account 类型
-export interface AccountContextType extends z.infer<typeof AccountContextTypeSchema> {} // 推导出 AccountContextType 类型
-export interface AccountSelectorProps extends z.infer<typeof AccountSelectorPropsSchema> {} // 推导出 AccountSelectorProps 类型
