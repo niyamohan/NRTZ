@@ -3,12 +3,22 @@ import { useRouter } from "next/navigation";
 import usePatients from "@/hooks/usePatients";  // 引入自定义 Hook
 
 const PatientPage = () => {
-  const patients = usePatients();  // 获取患者数据
+  const { patients, loading, error } = usePatients();  // 获取患者数据
   const router = useRouter();
 
   const handlePatientClick = (patientId: number) => {
     router.push(`/pages/comments/${patientId}`);
   };
+
+  // 渲染加载状态
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // 渲染错误状态
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 gap-4">

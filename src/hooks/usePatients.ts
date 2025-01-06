@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 
 const usePatients = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchPatients() {
@@ -12,17 +14,19 @@ const usePatients = () => {
           const data: Patient[] = await response.json();
           setPatients(data);
         } else {
-          console.error("Failed to fetch patients");
+          setError("Failed to fetch patients");
         }
       } catch (error) {
-        console.error("Error fetching patients:", error);
+        setError("Error fetching patients");
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchPatients();
   }, []);
 
-  return patients;
+  return { patients, loading, error };
 };
 
 export default usePatients;
