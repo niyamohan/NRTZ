@@ -3,7 +3,7 @@ import path from 'path';
 import { formatDate } from '../lib/utils';
 import { AllBasicSchemas, AllBasicSchemasData } from '../lib/zodSchemas'
 import { CommentSchema } from '../models/Comment';
- 
+
 
 // JSON ファイルパス
 const mockDbPath = path.resolve(process.cwd(), 'src', 'db.json');
@@ -13,7 +13,7 @@ let allBasicSchemasData: AllBasicSchemasData = {
   accounts: [],
   patients: [],
   comments: [],
-  maxCommentId : 0,
+  maxCommentId: 0,
 };
 
 // ロードモックデータ
@@ -27,9 +27,9 @@ function loadMockData() {
 
     if (allBasicSchemasData.comments.length > 0) {
       for (const comment of allBasicSchemasData.comments) {
-          if (comment.id > allBasicSchemasData.maxCommentId) {
-            allBasicSchemasData.maxCommentId = comment.id;
-          }
+        if (comment.id > allBasicSchemasData.maxCommentId) {
+          allBasicSchemasData.maxCommentId = comment.id;
+        }
       }
     }
 
@@ -51,23 +51,27 @@ export const fakeDb = {
 
   // 患者を取得する
   getPatientsByPatientId: (patientId: number) => {
-    const patients = allBasicSchemasData.patients.filter((patient) => patient.id === patientId);
-    if (patients.length === 0) {
+    // 获取患者信息
+    const patient = allBasicSchemasData.patients.find((patient) => patient.id === patientId);
+    if (!patient) {
       throw new Error(`Patient with ID ${patientId} not found.`);
     }
-    return patients;
-  },
 
-  // 患者のコメントを取得する
-  getCommentsByPatientId: (patientId: number) => {
-    return allBasicSchemasData.comments.filter((comment) => comment.patientId === patientId);
+    // 获取与患者相关的评论
+    const comments = allBasicSchemasData.comments.filter((comment) => comment.patientId === patientId);
+
+    // 返回患者及评论的组合数据
+    return {
+      patient,
+      comments,
+    };
   },
 
   // 患者にコメントを追加する
   addComment: (content: string, patientId: number, accountId: number, accountName: string) => {
 
     const newComment = CommentSchema.parse({
-      id:  ++ allBasicSchemasData.maxCommentId,
+      id: ++allBasicSchemasData.maxCommentId,
       content,
       patientId,
       accountId,

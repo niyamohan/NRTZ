@@ -45,7 +45,7 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between p-4 bg-gray-200">
-      <div className="text-lg font-bold">Account Management</div>
+      <div className="text-lg font-bold"></div>
       
       {/* 传递账户数据、当前选中的账户、以及账户变更处理函数给 AccountSelector */}
       <AccountSelector

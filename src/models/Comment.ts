@@ -27,6 +27,9 @@ export const CommentCardPropsSchema = z.object({
   editComment: z.function().args(z.number(), z.string()).returns(z.promise(z.void())), // 编辑评论的函数，接受评论 ID 和内容参数并返回 Promise
 });
 
+// 用 CommentCardPropsSchema 推导出 CommentCardProps 类型
+export type CommentCardProps = z.infer<typeof CommentCardPropsSchema>;
+
 // 评论列表 Props 数据的 Schema
 export const CommentListPropsSchema = z.object({
   comments: z.array(CommentSchema).nullable(), // 评论列表，数组类型，可以为空
@@ -35,7 +38,10 @@ export const CommentListPropsSchema = z.object({
   refreshComments: z.function().returns(z.promise(z.void())), // 刷新评论的函数，返回 Promise
   deleteComment: z.function().args(z.number()).returns(z.promise(z.void())), // 删除评论的函数，接受评论 ID 参数并返回 Promise
   editComment: z.function().args(z.number(), z.string()).returns(z.promise(z.void())), // 编辑评论的函数，接受评论 ID 和内容参数并返回 Promise
+  addComment: z.function().args(z.string()).returns(z.promise(z.void())), // 新增评论的函数，接受评论内容参数并返回 Promise
 });
+
+export type CommentListProps = z.infer<typeof CommentListPropsSchema>;
 
 // 评论操作的 Schema
 export const EditCommentSchema = z.object({
