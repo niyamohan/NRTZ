@@ -20,7 +20,7 @@ const CommentList = ({
       {comments && comments.length > 0 ? (
         comments.map((comment) => (
           <CommentCard
-            key={comment.id}
+            key={`${comment.id}-${comment.accountId}`} // 将 id 和 accountId 结合起来确保唯一性
             comment={comment}
             isEditingFlag={false}
             isProcessing={isProcessing}

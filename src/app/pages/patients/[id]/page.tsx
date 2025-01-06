@@ -4,8 +4,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import CommentList from "@/components/Comment/CommentList"; // 引入 CommentList 组件
 import Header from "@/components/Header/Header";
+import { RootState } from "@/redux/store/store";
+import { useSelector } from "react-redux";
 
 const PatientDetails = () => {
+
+  // 获取选中的账户
+  const selectedAccount = useSelector((state: RootState) => state.account.selectedAccount);
+
   const { id } = useParams(); // 获取动态路由中的 id 参数
   const router = useRouter();
   const [patientDetails, setPatientDetails] = useState<{
@@ -33,9 +39,6 @@ const PatientDetails = () => {
 
           if (response.ok) {
             const data = await response.json();
-
-            console.log(data);
-            
 
             // 给每个评论添加 patientId 和 accountId
             const updatedComments = data.comments.map((comment: any) => ({
@@ -65,7 +68,7 @@ const PatientDetails = () => {
   const deleteComment = async (commentId: number) => {
     setIsProcessing(true);
     try {
-      const response = await fetch(`/api/comments/delete/${commentId}`, {
+      const response = await fetch(`/api/comments/deleteComment/${commentId}`, {
         method: 'DELETE',
       });
 
@@ -94,7 +97,7 @@ const PatientDetails = () => {
   const editComment = async (commentId: number, newContent: string) => {
     setIsProcessing(true);
     try {
-      const response = await fetch(`/api/comments/edit/${commentId}`, {
+      const response = await fetch(`/api/comments/editComment/${commentId}`, {
         method: 'PUT',
         body: JSON.stringify({ content: newContent }),
         headers: { 'Content-Type': 'application/json' },
@@ -127,11 +130,19 @@ const PatientDetails = () => {
   const addComment = async (content: string) => {
     setIsProcessing(true);
     try {
-      const response = await fetch(`/api/comments/add`, {
+
+      // 从redux中获取选择account信息
+      const accountId = selectedAccount?.id;
+      const accountName = selectedAccount?.name;
+  
+      const response = await fetch(`/api/comments/addComment`, {
+
         method: 'POST',
         body: JSON.stringify({
           content,
           patientId: patientDetails?.patient.id,
+          accountId,  // 使用 accountId
+          accountName, // 使用 accountName
         }),
         headers: { 'Content-Type': 'application/json' },
       });
@@ -142,7 +153,7 @@ const PatientDetails = () => {
           if (prevState) {
             return {
               ...prevState,
-              comments: [...prevState.comments, newComment],
+              comments: [...prevState.comments, newComment], // 更新评论列表
             };
           }
           return prevState;
