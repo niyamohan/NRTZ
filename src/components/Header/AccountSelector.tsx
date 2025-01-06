@@ -23,9 +23,11 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ accounts, currentAcco
 
   return (
     <div className="relative">
-      <button onClick={toggleDropdown} className="bg-gray-100 px-4 py-2 rounded-md">
-        <span className="text-xl">👤</span>
-        {currentAccount ? currentAccount.name : '请选择账户'}
+      <button onClick={toggleDropdown} className="flex items-center px-4 py-2 bg-white shadow rounded">
+        <svg fill="#000000" width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" d="M12 2.5a5.5 5.5 0 00-3.096 10.047 9.005 9.005 0 00-5.9 8.18.75.75 0 001.5.045 7.5 7.5 0 0114.993 0 .75.75 0 101.499-.044 9.005 9.005 0 00-5.9-8.181A5.5 5.5 0 0012 2.5zM8 8a4 4 0 118 0 4 4 0 01-8 0z" />
+        </svg>
+        {currentAccount ? currentAccount.name : 'アカウント未選択'}
       </button>
 
       {isOpen && (
@@ -40,7 +42,9 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ accounts, currentAcco
                 onClick={() => handleAccountClick(account)}
               >
                 <div className="flex items-center space-x-2">
-                  <span className="text-xl">👤</span>
+                  <svg fill="#000000" width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M12 2.5a5.5 5.5 0 00-3.096 10.047 9.005 9.005 0 00-5.9 8.18.75.75 0 001.5.045 7.5 7.5 0 0114.993 0 .75.75 0 101.499-.044 9.005 9.005 0 00-5.9-8.181A5.5 5.5 0 0012 2.5zM8 8a4 4 0 118 0 4 4 0 01-8 0z" />
+                  </svg>
                   <span className="text-gray-800">{account.name}</span>
                 </div>
                 <span className="text-gray-500">➔</span>

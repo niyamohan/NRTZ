@@ -33,7 +33,11 @@ const PatientsPage = () => {
           onClick={() => handlePatientClick(patient.id)}  // 点击跳转到患者详情
         >
           <h2 className="text-xl font-semibold flex items-center">
-            <span className="mr-2">👤</span>
+            {/* 用户头像 */}
+            <svg width="64px" height="64px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mr-4">
+              <path d="M12 2.5a5.5 5.5 0 00-3.096 10.047 9.005 9.005 0 00-5.9 8.18.75.75 0 001.5.045 7.5 7.5 0 0114.993 0 .75.75 0 101.499-.044 9.005 9.005 0 00-5.9-8.181A5.5 5.5 0 0012 2.5zM8 8a4 4 0 118 0 4 4 0 01-8 0z" />
+            </svg>
+
             {patient.name}
           </h2>
           <span className="text-gray-400 text-2xl">➤</span>
