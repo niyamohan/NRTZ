@@ -6,6 +6,7 @@ import CommentList from "@/components/Comment/CommentList"; // 引入 CommentLis
 import Header from "@/components/Header/Header";
 import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const PatientDetails = () => {
 
@@ -53,7 +54,7 @@ const PatientDetails = () => {
           }
         } catch (err) {
           console.log(err);
-          
+
           setError("加载数据时发生错误，请稍后重试。");
         } finally {
           setLoading(false);
@@ -134,7 +135,7 @@ const PatientDetails = () => {
       // 从redux中获取选择account信息
       const accountId = selectedAccount?.id;
       const accountName = selectedAccount?.name;
-  
+
       const response = await fetch(`/api/comments/addComment`, {
 
         method: 'POST',
@@ -184,12 +185,22 @@ const PatientDetails = () => {
 
   return (
     <div className="p-6">
-        <Header />
-      <h1 className="text-2xl font-bold mb-4">患者详情</h1>
+      <Header />
+      <Link href={`/`} className="flex items-center space-x-4 text-black text-sm font-medium  p-2 pl-0 clear-right">
+        <svg fill="#000000" width="32px" height="32px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" d="M15.28 5.22a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 000 1.06l6.25 6.25a.75.75 0 101.06-1.06L9.56 12l5.72-5.72a.75.75 0 000-1.06z" />
+        </svg>
+        一覧に戻る
+      </Link>
       <div className="mb-6">
-        <p>
-          <strong>姓名:</strong> {patient.name}
-        </p>
+        <div className="flex items-center">
+          {/* 用户头像 */}
+          <svg width="64px" height="64px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mr-4">
+            <path d="M12 2.5a5.5 5.5 0 00-3.096 10.047 9.005 9.005 0 00-5.9 8.18.75.75 0 001.5.045 7.5 7.5 0 0114.993 0 .75.75 0 101.499-.044 9.005 9.005 0 00-5.9-8.181A5.5 5.5 0 0012 2.5zM8 8a4 4 0 118 0 4 4 0 01-8 0z" />
+          </svg>
+
+          <h1 className="text-gray-800 font-medium">{patient.name}</h1>
+        </div>
       </div>
 
       <h2 className="text-xl font-semibold mb-4">评论</h2>
