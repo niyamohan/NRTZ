@@ -14,13 +14,14 @@ const CommentList = ({
   addComment,
   refreshComments,  // 添加 refreshComments
 }: CommentListProps) => {
+
   return (
     <div className="space-y-4">
       {/* 渲染评论列表 */}
       {comments && comments.length > 0 ? (
-        comments.map((comment) => (
+        comments.map((comment, index) => (
           <CommentCard
-            key={`${comment.id}-${comment.accountId}`} // 将 id 和 accountId 结合起来确保唯一性
+            key={ index } // 将 id 和 accountId 结合起来确保唯一性
             comment={comment}
             isEditingFlag={false}
             isProcessing={isProcessing}
