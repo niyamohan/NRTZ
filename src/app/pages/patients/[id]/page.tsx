@@ -153,7 +153,7 @@ const PatientDetails = () => {
           if (prevState) {
             return {
               ...prevState,
-              comments: [...prevState.comments, newComment], // 更新评论列表
+              comments: [...prevState.comments, newComment.comment], // 更新评论列表
             };
           }
           return prevState;
