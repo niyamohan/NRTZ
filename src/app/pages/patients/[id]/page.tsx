@@ -74,7 +74,7 @@ const PatientDetails = () => {
       });
 
       if (response.ok) {
-        alert('评论删除成功');
+        alert('コメント削除完了');
         setPatientDetails((prevState) => {
           if (prevState) {
             return {
@@ -85,10 +85,10 @@ const PatientDetails = () => {
           return prevState;
         });
       } else {
-        alert('评论删除失败');
+        alert('コメント削除エラー');
       }
     } catch (error) {
-      alert('删除评论时发生错误');
+      alert('コメント削除時エラー発生');
     } finally {
       setIsProcessing(false);
     }
@@ -118,10 +118,10 @@ const PatientDetails = () => {
           return prevState;
         });
       } else {
-        alert('评论编辑失败');
+        alert('コメント編集エラー');
       }
     } catch (error) {
-      alert('编辑评论时发生错误');
+      alert('コメント編集時エラー発生');
     } finally {
       setIsProcessing(false);
     }
@@ -160,10 +160,10 @@ const PatientDetails = () => {
           return prevState;
         });
       } else {
-        alert('评论添加失败');
+        alert('コメント追加エラー');
       }
     } catch (error) {
-      alert('添加评论时发生错误');
+      alert('コメント追加时エラー発生');
     } finally {
       setIsProcessing(false);
     }
@@ -220,10 +220,10 @@ const PatientDetails = () => {
               const data = await response.json();
               setPatientDetails(data);
             } else {
-              alert('刷新评论失败');
+              alert('コメントのリフレッシュエラー');
             }
           } catch (error) {
-            alert('刷新评论时发生错误');
+            alert('コメントのリフレッシュ时エラー発生');
           } finally {
             setLoading(false);
           }

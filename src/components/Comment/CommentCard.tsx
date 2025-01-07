@@ -1,26 +1,20 @@
-// components/comment/CommentCard.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CommentCardProps } from '@/models/Comment'; // 引入 CommentCardProps 类型
 import { RootState } from '@/redux/store/store';
 import { useSelector } from 'react-redux';
 
 const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, editComment, refreshComments }: CommentCardProps) => {
-
   // 获取选中的账户
   const selectedAccount = useSelector((state: RootState) => state.account.selectedAccount);
 
   // 判断当前评论的账户 ID 是否与 Redux 中选中的账户 ID 相同
   const isOwnComment = selectedAccount?.name === comment.accountName;
 
-  console.log(selectedAccount?.name);
-  
-  console.log(comment);
-  
-
   const [isEditing, setIsEditing] = useState(isEditingFlag);
   const [content, setContent] = useState(comment.content);
+  const commentCardRef = useRef<HTMLDivElement>(null); // 用于监听点击事件是否发生在编辑框外
 
   // 删除评论的回调
   const handleDelete = () => {
@@ -37,8 +31,30 @@ const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, edit
     });
   };
 
+  // 点击事件处理：判断是否点击在编辑区域外
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (commentCardRef.current && !commentCardRef.current.contains(event.target as Node)) {
+        if (isEditing) {
+          // 如果在编辑模式且点击在编辑框外，则弹出确认框
+          const shouldCancel = window.confirm('編集中の内容は保存されません。編集をキャンセルしますか？');
+          if (shouldCancel) {
+            setIsEditing(false);
+            setContent(comment.content); // 取消编辑，恢复原内容
+          }
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isEditing, comment.content]);
+
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 space-y-2">
+    <div ref={commentCardRef} className="bg-white shadow-md rounded-lg p-4 space-y-2">
       <div className="flex items-center space-x-4">
         <div className="bg-gray-300 rounded-lg p-2">
           {/* 用户头像 */}
@@ -49,7 +65,6 @@ const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, edit
         <span className="text-gray-800 font-medium">{comment.accountName}</span>
       </div>
       <div className="text-sm text-gray-500">{comment.updatedAt}</div>
-
 
       {isEditing ? (
         <div>
@@ -75,7 +90,6 @@ const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, edit
           {comment.content}
         </p>
       )}
-
 
       <div className="flex justify-end">
         <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-1 text-sm rounded-md">
