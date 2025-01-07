@@ -7,9 +7,9 @@ import Header from "@/components/Header/Header";
 import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import Link from "next/link";
+import {Comment} from "@/models/Comment"
 
 const PatientDetails = () => {
-
   // 获取选中的账户
   const selectedAccount = useSelector((state: RootState) => state.account.selectedAccount);
 
@@ -17,15 +17,7 @@ const PatientDetails = () => {
   const router = useRouter();
   const [patientDetails, setPatientDetails] = useState<{
     patient: { id: number; name: string };
-    comments: Array<{
-      id: number;
-      content: string;
-      accountName: string;
-      createdAt: string;
-      updatedAt: string;
-      accountId: number;  // 添加 accountId
-      patientId: number;  // 添加 patientId
-    }>;
+    comments: Comment[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,6 +39,9 @@ const PatientDetails = () => {
               patientId: data.patient.id, // 假设 patientId 是患者 ID
               accountId: data.patient.accountId, // 假设 accountId 是患者的账户 ID
             }));
+
+            // 按更新时间排序，最新的评论排在最前面
+            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
             setPatientDetails({ ...data, comments: updatedComments });
           } else {
@@ -77,9 +72,12 @@ const PatientDetails = () => {
         alert('コメント削除完了');
         setPatientDetails((prevState) => {
           if (prevState) {
+            // 删除评论后重新排序
+            const updatedComments = prevState.comments.filter((comment) => comment.id !== commentId);
+            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
             return {
               ...prevState,
-              comments: prevState.comments.filter((comment) => comment.id !== commentId),
+              comments: updatedComments,
             };
           }
           return prevState;
@@ -88,7 +86,7 @@ const PatientDetails = () => {
         alert('コメント削除エラー');
       }
     } catch (error) {
-      alert('コメント削除時エラー発生');
+      alert('コメント削除时エラー発生');
     } finally {
       setIsProcessing(false);
     }
@@ -108,11 +106,22 @@ const PatientDetails = () => {
         const updatedComment = await response.json();
         setPatientDetails((prevState) => {
           if (prevState) {
+
+            // 确保 updatedComment 包含有效的 updatedAt 字段
+            if (!updatedComment.updatedAt) {
+              updatedComment.updatedAt = new Date().toISOString();
+            }
+            // 更新评论数据
+            const updatedComments = prevState.comments.map((comment) =>
+              comment.id === commentId ? { ...comment, ...updatedComment } : comment
+            );
+
+            // 按更新时间排序
+            updatedComments.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
             return {
               ...prevState,
-              comments: prevState.comments.map((comment) =>
-                comment.id === commentId ? updatedComment : comment
-              ),
+              comments: updatedComments,
             };
           }
           return prevState;
@@ -121,7 +130,7 @@ const PatientDetails = () => {
         alert('コメント編集エラー');
       }
     } catch (error) {
-      alert('コメント編集時エラー発生');
+      alert('コメント編集时エラー発生');
     } finally {
       setIsProcessing(false);
     }
@@ -131,13 +140,10 @@ const PatientDetails = () => {
   const addComment = async (content: string) => {
     setIsProcessing(true);
     try {
-
-      // 从redux中获取选择account信息
       const accountId = selectedAccount?.id;
       const accountName = selectedAccount?.name;
 
       const response = await fetch(`/api/comments/addComment`, {
-
         method: 'POST',
         body: JSON.stringify({
           content,
@@ -152,9 +158,12 @@ const PatientDetails = () => {
         const newComment = await response.json();
         setPatientDetails((prevState) => {
           if (prevState) {
+            // 新评论添加到列表后重新排序
+            const updatedComments = [...prevState.comments, newComment.comment];
+            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
             return {
               ...prevState,
-              comments: [...prevState.comments, newComment.comment], // 更新评论列表
+              comments: updatedComments,
             };
           }
           return prevState;

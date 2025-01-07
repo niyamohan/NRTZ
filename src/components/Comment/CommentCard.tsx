@@ -27,7 +27,7 @@ const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, edit
   const handleEdit = () => {
     editComment(comment.id, content).then(() => {
       setIsEditing(false);
-      refreshComments(); // 重新加载评论
+      //refreshComments(); // 重新加载评论
     });
   };
 
