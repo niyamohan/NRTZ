@@ -212,9 +212,7 @@ const PatientDetails = () => {
         </div>
       </div>
 
-      <h2 className="text-xl font-semibold mb-4">评论</h2>
-
-      {/* 将 CommentList 组件添加到此处 */}
+      <hr className="border-gray-300 my-6" />
       <CommentList
         comments={comments}
         isProcessing={isProcessing}
