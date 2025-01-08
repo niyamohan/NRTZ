@@ -10,10 +10,6 @@ const withLock = <T>(fn: (...args: any[]) => Promise<T>) => {
 };
 
 export const accountsDb = {
-  findFirst: withLock(async (id: number) => {
-    const accounts = await readDataFile<Account>('accounts');
-    return accounts.find((account) => account.id === id);
-  }),
   findMany: withLock(async () => {
     const accounts = await readDataFile<Account>('accounts');
     return accounts;

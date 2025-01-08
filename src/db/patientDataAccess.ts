@@ -12,8 +12,7 @@ const withLock = <T>(fn: (...args: any[]) => Promise<T>) => {
 export const patientsDb = {
   findAll: async () => {
     const patients = await readDataFile<Patient>('patients');
-    // ソート条件を更新日時から名前に変更
-    patients.sort((a, b) => a.name.localeCompare(b.name));
+    patients.sort((a, b) => b.updatedAt - a.updatedAt);
     return patients;
   },
 };
