@@ -7,7 +7,8 @@ import Header from "@/components/Header/Header";
 import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import {Comment} from "@/models/Comment"
+import {Comment} from "@/schemas/commentSchemas"
+import { addCommentAction, deleteCommentAction, getAllCommentsByPatientIdAction, updateCommentAction } from "@/server/actions";
 
 const PatientDetails = () => {
   // 获取选中的账户
@@ -28,155 +29,149 @@ const PatientDetails = () => {
     if (id) {
       const fetchPatientDetails = async () => {
         try {
-          const response = await fetch(`/api/patients/getPatientDetails/${id}`);
-
-          if (response.ok) {
-            const data = await response.json();
-
-            // 给每个评论添加 patientId 和 accountId
-            const updatedComments = data.comments.map((comment: any) => ({
+          const response = await getAllCommentsByPatientIdAction(String(id));
+  
+          if (response && response.patient && response.comments&& response.comments.length > 0) {
+            const updatedComments = response.comments.map((comment: any) => ({
               ...comment,
-              patientId: data.patient.id, // 假设 patientId 是患者 ID
-              accountId: data.patient.accountId, // 假设 accountId 是患者的账户 ID
+              patientId: response.patient.id, // 假设 patientId 是患者 ID
             }));
-
+  
             // 按更新时间排序，最新的评论排在最前面
             updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-
-            setPatientDetails({ ...data, comments: updatedComments });
+  
+            setPatientDetails({ ...response, comments: updatedComments });
           } else {
-            setError(`Failed to fetch patient details: ${response.statusText}`);
+            setError("No comments found.");
           }
         } catch (err) {
-          console.log(err);
-
+          console.error(err);
           setError("加载数据时发生错误，请稍后重试。");
         } finally {
           setLoading(false);
         }
       };
-
+  
       fetchPatientDetails();
     }
   }, [id]);
 
   // 删除评论的函数
-  const deleteComment = async (commentId: number) => {
-    setIsProcessing(true);
-    try {
-      const response = await fetch(`/api/comments/deleteComment/${commentId}`, {
-        method: 'DELETE',
+const deleteComment = async (commentId: number) => {
+  setIsProcessing(true);
+  try {
+    const response = await deleteCommentAction(commentId); // 使用 deleteCommentAction 来删除评论
+
+    if (response.success) {
+      alert('コメント削除完了');
+      setPatientDetails((prevState) => {
+        if (prevState) {
+          // 删除评论后重新排序
+          const updatedComments = prevState.comments.filter((comment) => comment.id !== commentId);
+          updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+          return {
+            ...prevState,
+            comments: updatedComments,
+          };
+        }
+        return prevState;
       });
-
-      if (response.ok) {
-        alert('コメント削除完了');
-        setPatientDetails((prevState) => {
-          if (prevState) {
-            // 删除评论后重新排序
-            const updatedComments = prevState.comments.filter((comment) => comment.id !== commentId);
-            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-            return {
-              ...prevState,
-              comments: updatedComments,
-            };
-          }
-          return prevState;
-        });
-      } else {
-        alert('コメント削除エラー');
-      }
-    } catch (error) {
-      alert('コメント削除时エラー発生');
-    } finally {
-      setIsProcessing(false);
+    } else {
+      alert(response.error || 'コメント削除エラー');
     }
-  };
+  } catch (error) {
+    alert('コメント削除时エラー発生');
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
-  // 编辑评论的函数
-  const editComment = async (commentId: number, newContent: string) => {
-    setIsProcessing(true);
-    try {
-      const response = await fetch(`/api/comments/editComment/${commentId}`, {
-        method: 'PUT',
-        body: JSON.stringify({ content: newContent }),
-        headers: { 'Content-Type': 'application/json' },
+// 编辑评论的函数
+const editComment = async (commentId: number, newContent: string) => {
+  setIsProcessing(true);
+  try {
+    const response = await updateCommentAction(commentId, newContent); // 使用 updateCommentAction 來更新评论
+
+    if (response.success) {
+      alert('コメント編集完了');
+      setPatientDetails((prevState) => {
+        if (prevState) {
+
+          // 确保 updatedComment 包含有效的 updatedAt 字段
+          if (!response.updatedComment.updatedAt) {
+            response.updatedComment.updatedAt = new Date().toISOString();
+          }
+
+          // 更新评论数据
+          const updatedComments = prevState.comments.map((comment) =>
+            comment.id === commentId ? { ...comment, ...response.updatedComment } : comment
+          );
+
+          // 按更新时间排序
+          updatedComments.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+          return {
+            ...prevState,
+            comments: updatedComments,
+          };
+        }
+        return prevState;
       });
-
-      if (response.ok) {
-        const updatedComment = await response.json();
-        setPatientDetails((prevState) => {
-          if (prevState) {
-
-            // 确保 updatedComment 包含有效的 updatedAt 字段
-            if (!updatedComment.updatedAt) {
-              updatedComment.updatedAt = new Date().toISOString();
-            }
-            // 更新评论数据
-            const updatedComments = prevState.comments.map((comment) =>
-              comment.id === commentId ? { ...comment, ...updatedComment } : comment
-            );
-
-            // 按更新时间排序
-            updatedComments.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-
-            return {
-              ...prevState,
-              comments: updatedComments,
-            };
-          }
-          return prevState;
-        });
-      } else {
-        alert('コメント編集エラー');
-      }
-    } catch (error) {
-      alert('コメント編集时エラー発生');
-    } finally {
-      setIsProcessing(false);
+    } else {
+      alert(response.error || 'コメント編集エラー');
     }
-  };
+  } catch (error) {
+    alert('コメント編集时エラー発生');
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
-  // 添加评论的函数
-  const addComment = async (content: string) => {
-    setIsProcessing(true);
-    try {
-      const accountId = selectedAccount?.id;
-      const accountName = selectedAccount?.name;
+// 添加评论的函数
+const addComment = async (content: string) => {
+  setIsProcessing(true);
+  try {
+    const accountId = selectedAccount?.id;
+    const accountName = selectedAccount?.name;
 
-      const response = await fetch(`/api/comments/addComment`, {
-        method: 'POST',
-        body: JSON.stringify({
-          content,
-          patientId: patientDetails?.patient.id,
-          accountId,  // 使用 accountId
-          accountName, // 使用 accountName
-        }),
-        headers: { 'Content-Type': 'application/json' },
+    if (!accountId) {
+      throw new Error('account ID が取得できません');
+    }
+
+
+    if (!accountName) {
+      throw new Error('account Name が取得できません');
+    }
+
+    // 確認して patientId が undefined でないことを確認
+    if (!patientDetails?.patient.id) {
+      throw new Error('患者 ID が取得できません');
+    }
+
+    const response = await addCommentAction(content, patientDetails.patient.id, accountId, accountName);
+
+    if (response.success) {
+      setPatientDetails((prevState) => {
+        if (prevState) {
+          // 新评论添加到列表后重新排序
+          const updatedComments = [...prevState.comments, response.comment];
+          updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+          return {
+            ...prevState,
+            comments: updatedComments,
+          };
+        }
+        return prevState;
       });
-
-      if (response.ok) {
-        const newComment = await response.json();
-        setPatientDetails((prevState) => {
-          if (prevState) {
-            // 新评论添加到列表后重新排序
-            const updatedComments = [...prevState.comments, newComment.comment];
-            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-            return {
-              ...prevState,
-              comments: updatedComments,
-            };
-          }
-          return prevState;
-        });
-      } else {
-        alert('コメント追加エラー');
-      }
-    } catch (error) {
-      alert('コメント追加时エラー発生');
-    } finally {
-      setIsProcessing(false);
+    } else {
+      alert('コメント追加エラー');
     }
-  };
+  } catch (error) {
+    alert('コメント追加时エラー発生');
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
   if (loading) {
     return <div>加载患者详情中...</div>;

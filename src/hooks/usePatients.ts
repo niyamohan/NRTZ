@@ -1,4 +1,5 @@
-import { Patient } from "@/models/Patient";
+import { Patient } from "@/schemas/patientSchemas";
+import { getAllPatientsAction } from "@/server/actions";
 import { useState, useEffect } from "react";
 
 const usePatients = () => {
@@ -8,20 +9,19 @@ const usePatients = () => {
 
   useEffect(() => {
     async function fetchPatients() {
+      setLoading(true); // 开始加载
+
       try {
-        const response = await fetch("/api/patients/getPatients");
-        console.log(response);
-        
-        if (response.ok) {
-          const data: Patient[] = await response.json();
-          setPatients(data);
+        const response = await getAllPatientsAction(); // 调用你的getAllPatientsAction函数
+        if (response.success) {
+          setPatients(response.patients);
         } else {
-          setError("Failed to fetch patients");
+          setError(response.error || "Failed to fetch patients");
         }
       } catch (error) {
         setError("Error fetching patients");
       } finally {
-        setLoading(false);
+        setLoading(false); // 加载结束
       }
     }
 

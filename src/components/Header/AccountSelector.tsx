@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Account } from '../../models/Account';
+import { Account } from '@/schemas/accountSchemas';
 
 type AccountSelectorProps = {
   accounts: Account[];

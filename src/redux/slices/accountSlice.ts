@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Account } from '../../models/Account';
+import { Account } from '@/schemas/accountSchemas';
 
 interface AccountState {
   selectedAccount: Account | null;
