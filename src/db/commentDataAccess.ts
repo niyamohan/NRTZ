@@ -3,6 +3,7 @@ import { readDataFile, writeDataFile } from '@/db/db_config';
 import { Comment, CommentSchemas } from '@/schemas/commentSchemas';
 import { Patient } from '@/schemas/patientSchemas';
 import { formatDate } from '@/lib/utils';
+import { patientsDb } from './patientDataAccess';
 
 const lock = new AsyncLock();
 const withLock = <T>(fn: (...args: any[]) => Promise<T>) => {
@@ -32,7 +33,10 @@ export const commentsDb = {
   deleteComment: withLock(async (commentId: number) => {
     const comments: Comment[] = await readDataFile<Comment>('comments');
     const newComments = comments.filter((comment) => comment.id !== commentId);
+
     await writeDataFile('comments', newComments);
+    // 更新患者的 updatedAt
+    await patientsDb.updateUpdatedAtById(newComments[0].patientId);
   }),
 
   updateComment: withLock(async (commentId: number, newContent: string) => {
@@ -48,6 +52,11 @@ export const commentsDb = {
     comments[commentIndex].updatedAt = formatDate(new Date());
 
     await writeDataFile('comments', comments);
+
+    // 更新患者的 updatedAt
+    await patientsDb.updateUpdatedAtById(comments[commentIndex].patientId);
+
+
     return comments[commentIndex];
   }),
 
@@ -75,6 +84,9 @@ export const commentsDb = {
 
     // コメントを保存
     await writeDataFile('comments', comments);
+
+    // 更新患者的 updatedAt
+    await patientsDb.updateUpdatedAtById(patientId);
 
     return newComment;
   }),
