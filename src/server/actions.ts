@@ -66,17 +66,10 @@ export async function deleteCommentAction(commentId: number) {
     'use server'
 
     try {
-        const deletedCommentId = await commentsDb.deleteComment(Number(commentId)); // パラメータの型変換
-        if (deletedCommentId === undefined) { // 修正点: 削除されたコメント ID が undefined ならエラー
-            return {
-                error: 'コメントが削除されませんでした',
-            };
-        }
-
+        await commentsDb.deleteComment(Number(commentId)); // パラメータの型変換
         return {
             success: true,
-            message: 'コメントが削除されました',
-            commentId: deletedCommentId, // 削除されたコメント ID を返す
+            message: 'コメントが削除されました'
         };
     } catch (error) {
         console.error(error);
