@@ -3,7 +3,6 @@
 import { accountsDb } from "@/db/accountDataAccess";
 import { commentsDb } from "@/db/commentDataAccess";
 import { patientsDb } from "@/db/patientDataAccess";
-import { AccountSchema } from "@/models/Account";
 
 
 // -------------------------------------ACTION查询所有账户start-------------------------------------
