@@ -1,4 +1,3 @@
-// components/comment/CommentInput.tsx
 'use client';
 
 import React, { useState } from 'react';
