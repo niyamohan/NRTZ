@@ -19,12 +19,12 @@
   },
   {
     "id": 3,
-    "content": "34343😋moha3333accacacacaca.   mohan12345",
+    "content": "血圧が高めです。食事制限と運動を推奨します。次回の診察で経過を確認しましょう",
     "patientId": 1,
     "accountId": 1,
     "accountName": "Account1",
     "createdAt": "2024.07.19 10:04",
-    "updatedAt": "2025.01.07 14:19"
+    "updatedAt": "2025.01.09 09:56"
   },
   {
     "id": 4,
@@ -73,30 +73,30 @@
   },
   {
     "id": 24,
-    "content": "aaaaaaaaaaaaa",
+    "content": "睡眠時の咳について相談あり。",
     "patientId": 2,
     "accountId": 2,
     "accountName": "Account2",
     "createdAt": "2024.12.30 17:45",
-    "updatedAt": "2024.12.30 17:45"
+    "updatedAt": "2025.01.09 09:58"
   },
   {
     "id": 25,
-    "content": "aaaaa",
+    "content": "アレルギー検査の結果、ハウスダストに反応が出ています。対策について説明済み。",
     "patientId": 2,
     "accountId": 2,
     "accountName": "Account2",
     "createdAt": "2024.12.30 17:47",
-    "updatedAt": "2024.12.30 17:47"
+    "updatedAt": "2025.01.09 09:57"
   },
   {
     "id": 29,
-    "content": "ddddddddddddddd",
+    "content": "MRI検査の結果、特に異常は見られません。生活習慣の改善を提案。",
     "patientId": 3,
     "accountId": 2,
     "accountName": "Account2",
     "createdAt": "2024.12.30 18:02",
-    "updatedAt": "2024.12.30 18:02"
+    "updatedAt": "2025.01.09 09:59"
   },
   {
     "id": 31,
@@ -118,12 +118,12 @@
   },
   {
     "id": 33,
-    "content": "wo li giao999",
+    "content": "初診。慢性的な頭痛の訴えあり。詳細な検査を予定。",
     "patientId": 3,
     "accountId": 1,
     "accountName": "Account1",
     "createdAt": "2025.01.06 18:55",
-    "updatedAt": "2025.01.08 17:23"
+    "updatedAt": "2025.01.09 09:59"
   },
   {
     "id": 34,
@@ -154,20 +154,20 @@
   },
   {
     "id": 37,
-    "content": "chongxin xuanran",
+    "content": "服薬管理が適切にできています。副作用の報告もありません。",
     "patientId": 1,
     "accountId": 1,
     "accountName": "Account1",
     "createdAt": "2025.01.07 14:17",
-    "updatedAt": "2025.01.07 14:17"
+    "updatedAt": "2025.01.09 09:57"
   },
   {
     "id": 38,
-    "content": "wo li da giao888",
+    "content": "定期検査の結果は良好です。現在の治療計画を継続します。",
     "patientId": 3,
     "accountId": 1,
     "accountName": "Account1",
     "createdAt": "2025.01.08 17:39",
-    "updatedAt": "2025.01.08 17:39"
+    "updatedAt": "2025.01.09 09:58"
   }
 ]
