@@ -6,8 +6,6 @@ import { patientsDb } from "@/db/patientDataAccess";
 
 // -------------------------------------ACTIONすべてのアカウントを取得開始-------------------------------------
 export async function getAllAccountsAction() {
-    'use server'
-
     const accounts = await accountsDb.findMany()
     if (!accounts || accounts.length === 0) {
         return {
@@ -24,8 +22,6 @@ export async function getAllAccountsAction() {
 
 // -------------------------------------ACTIONすべての患者を取得開始-------------------------------------
 export async function getAllPatientsAction() {
-    'use server'
-
     const patients = await patientsDb.findAll()
     if (!patients || patients.length === 0) {
         return {
@@ -42,7 +38,6 @@ export async function getAllPatientsAction() {
 
 // -------------------------------------ACTION すべてのコメントを取得開始 -------------------------------------
 export async function getAllCommentsByPatientIdAction(patientId: string) {
-    'use server'
 
     const commentsData = await commentsDb.findManyByPatientId(Number(patientId)); // パラメータの型変換
     if (!commentsData || commentsData.comments.length === 0) {
@@ -61,8 +56,6 @@ export async function getAllCommentsByPatientIdAction(patientId: string) {
 
 // -------------------------------------ACTION コメント削除開始 -------------------------------------
 export async function deleteCommentAction(commentId: number) {
-    'use server'
-
     try {
         await commentsDb.deleteComment(Number(commentId)); // パラメータの型変換
         return {
@@ -80,8 +73,6 @@ export async function deleteCommentAction(commentId: number) {
 
 // -------------------------------------ACTION コメント更新開始 -------------------------------------
 export async function updateCommentAction(commentId: number, newContent: string) {
-    'use server'
-
     try {
         const updatedComment = await commentsDb.updateComment(commentId, newContent); // パラメータの型変換
 
@@ -107,8 +98,6 @@ export async function updateCommentAction(commentId: number, newContent: string)
 
 // -------------------------------------ACTION コメント追加開始 -------------------------------------
 export async function addCommentAction(content: string, patientId: number, accountId: number, accountName: string) {
-    'use server';
-  
     try {
       const newComment = await commentsDb.addComment(content, patientId, accountId, accountName);
   
