@@ -214,19 +214,7 @@ const PatientDetails = () => {
         addComment={addComment}
         refreshComments={async () => {
           setLoading(true);
-          try {
-            const response = await fetch(`/api/patients/getPatientDetails/${id}`);
-            if (response.ok) {
-              const data = await response.json();
-              setPatientDetails(data);
-            } else {
-              alert('コメントのリフレッシュエラー');
-            }
-          } catch (error) {
-            alert('コメントのリフレッシュ中にエラーが発生しました');
-          } finally {
-            setLoading(false);
-          }
+          setLoading(false);
         }}
         isEditingFlag={isEditingFlag} // isEditingFlag を渡す
       />
