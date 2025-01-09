@@ -2,7 +2,7 @@
 "use client";
 
 import { Provider } from 'react-redux';
-import { store } from '../redux/store/store';  // 导入刚刚创建的 Redux store
+import { store } from '../redux/store/store';
 import "../styles/globals.css";
 
 export default function RootLayout({

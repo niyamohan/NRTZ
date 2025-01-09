@@ -2,19 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import CommentList from "@/components/Comment/CommentList"; // 引入 CommentList 组件
+import CommentList from "@/components/Comment/CommentList"; // CommentList コンポーネントのインポート
 import Header from "@/components/Header/Header";
 import { RootState } from "@/redux/store/store";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import {Comment} from "@/schemas/commentSchemas"
+import { Comment } from "@/schemas/commentSchemas";
 import { addCommentAction, deleteCommentAction, getAllCommentsByPatientIdAction, updateCommentAction } from "@/server/actions";
 
 const PatientDetails = () => {
-  // 获取选中的账户
+  // 選択されたアカウントを取得
   const selectedAccount = useSelector((state: RootState) => state.account.selectedAccount);
 
-  const { id } = useParams(); // 获取动态路由中的 id 参数
+  const { id } = useParams(); // 動的ルートから id パラメータを取得
   const router = useRouter();
   const [patientDetails, setPatientDetails] = useState<{
     patient: { id: number; name: string };
@@ -22,159 +22,157 @@ const PatientDetails = () => {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false); // 控制删除评论时的处理状态
-  const [isEditingFlag, setIsEditingFlag] = useState(false); // 新增编辑状态
+  const [isProcessing, setIsProcessing] = useState(false); // コメント削除時の処理状態を制御
+  const [isEditingFlag, setIsEditingFlag] = useState(false); // 編集状態を制御
 
   useEffect(() => {
     if (id) {
       const fetchPatientDetails = async () => {
         try {
           const response = await getAllCommentsByPatientIdAction(String(id));
-  
-          if (response && response.patient && response.comments&& response.comments.length > 0) {
+
+          if (response && response.patient && response.comments && response.comments.length > 0) {
             const updatedComments = response.comments.map((comment: any) => ({
               ...comment,
-              patientId: response.patient.id, // 假设 patientId 是患者 ID
+              patientId: response.patient.id, // patientId は患者 ID と仮定
             }));
-  
-            // 按更新时间排序，最新的评论排在最前面
+
+            // 更新日時でソートし、最新のコメントを先に表示
             updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  
+
             setPatientDetails({ ...response, comments: updatedComments });
           } else {
-            setError("No comments found.");
+            setError("コメントが見つかりませんでした。");
           }
         } catch (err) {
           console.error(err);
-          setError("加载数据时发生错误，请稍后重试。");
+          setError("データ読み込み中にエラーが発生しました。後ほど再試行してください。");
         } finally {
           setLoading(false);
         }
       };
-  
+
       fetchPatientDetails();
     }
   }, [id]);
 
-  // 删除评论的函数
-const deleteComment = async (commentId: number) => {
-  setIsProcessing(true);
-  try {
-    const response = await deleteCommentAction(commentId); // 使用 deleteCommentAction 来删除评论
+  // コメント削除の関数
+  const deleteComment = async (commentId: number) => {
+    setIsProcessing(true);
+    try {
+      const response = await deleteCommentAction(commentId); // deleteCommentAction を使用してコメントを削除
 
-    if (response.success) {
-      alert('コメント削除完了');
-      setPatientDetails((prevState) => {
-        if (prevState) {
-          // 删除评论后重新排序
-          const updatedComments = prevState.comments.filter((comment) => comment.id !== commentId);
-          updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-          return {
-            ...prevState,
-            comments: updatedComments,
-          };
-        }
-        return prevState;
-      });
-    } else {
-      alert(response.error || 'コメント削除エラー');
-    }
-  } catch (error) {
-    alert('コメント削除时エラー発生');
-  } finally {
-    setIsProcessing(false);
-  }
-};
-
-// 编辑评论的函数
-const editComment = async (commentId: number, newContent: string) => {
-  setIsProcessing(true);
-  try {
-    const response = await updateCommentAction(commentId, newContent); // 使用 updateCommentAction 來更新评论
-
-    if (response.success) {
-      alert('コメント編集完了');
-      setPatientDetails((prevState) => {
-        if (prevState) {
-
-          // 确保 updatedComment 包含有效的 updatedAt 字段
-          if (!response.updatedComment.updatedAt) {
-            response.updatedComment.updatedAt = new Date().toISOString();
+      if (response.success) {
+        alert('コメント削除完了');
+        setPatientDetails((prevState) => {
+          if (prevState) {
+            // コメント削除後に再ソート
+            const updatedComments = prevState.comments.filter((comment) => comment.id !== commentId);
+            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+            return {
+              ...prevState,
+              comments: updatedComments,
+            };
           }
-
-          // 更新评论数据
-          const updatedComments = prevState.comments.map((comment) =>
-            comment.id === commentId ? { ...comment, ...response.updatedComment } : comment
-          );
-
-          // 按更新时间排序
-          updatedComments.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-
-          return {
-            ...prevState,
-            comments: updatedComments,
-          };
-        }
-        return prevState;
-      });
-    } else {
-      alert(response.error || 'コメント編集エラー');
+          return prevState;
+        });
+      } else {
+        alert(response.error || 'コメント削除エラー');
+      }
+    } catch (error) {
+      alert('コメント削除中にエラーが発生しました');
+    } finally {
+      setIsProcessing(false);
     }
-  } catch (error) {
-    alert('コメント編集时エラー発生');
-  } finally {
-    setIsProcessing(false);
-  }
-};
+  };
 
-// 添加评论的函数
-const addComment = async (content: string) => {
-  setIsProcessing(true);
-  try {
-    const accountId = selectedAccount?.id;
-    const accountName = selectedAccount?.name;
+  // コメント編集の関数
+  const editComment = async (commentId: number, newContent: string) => {
+    setIsProcessing(true);
+    try {
+      const response = await updateCommentAction(commentId, newContent); // updateCommentAction を使用してコメントを更新
 
-    if (!accountId) {
-      throw new Error('account ID が取得できません');
+      if (response.success) {
+        alert('コメント編集完了');
+        setPatientDetails((prevState) => {
+          if (prevState) {
+            // updatedComment が有効な updatedAt フィールドを含むことを確認
+            if (!response.updatedComment.updatedAt) {
+              response.updatedComment.updatedAt = new Date().toISOString();
+            }
+
+            // コメントデータを更新
+            const updatedComments = prevState.comments.map((comment) =>
+              comment.id === commentId ? { ...comment, ...response.updatedComment } : comment
+            );
+
+            // 更新日時でソート
+            updatedComments.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+            return {
+              ...prevState,
+              comments: updatedComments,
+            };
+          }
+          return prevState;
+        });
+      } else {
+        alert(response.error || 'コメント編集エラー');
+      }
+    } catch (error) {
+      alert('コメント編集中にエラーが発生しました');
+    } finally {
+      setIsProcessing(false);
     }
+  };
 
+  // コメント追加の関数
+  const addComment = async (content: string) => {
+    setIsProcessing(true);
+    try {
+      const accountId = selectedAccount?.id;
+      const accountName = selectedAccount?.name;
 
-    if (!accountName) {
-      throw new Error('account Name が取得できません');
+      if (!accountId) {
+        throw new Error('アカウントIDを取得できません');
+      }
+
+      if (!accountName) {
+        throw new Error('アカウント名を取得できません');
+      }
+
+      // patientId が undefined でないことを確認
+      if (!patientDetails?.patient.id) {
+        throw new Error('患者IDを取得できません');
+      }
+
+      const response = await addCommentAction(content, patientDetails.patient.id, accountId, accountName);
+
+      if (response.success) {
+        setPatientDetails((prevState) => {
+          if (prevState) {
+            // 新しいコメントをリストに追加後、再ソート
+            const updatedComments = [...prevState.comments, response.comment];
+            updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+            return {
+              ...prevState,
+              comments: updatedComments,
+            };
+          }
+          return prevState;
+        });
+      } else {
+        alert('コメント追加エラー');
+      }
+    } catch (error) {
+      alert('コメント追加中にエラーが発生しました');
+    } finally {
+      setIsProcessing(false);
     }
-
-    // 確認して patientId が undefined でないことを確認
-    if (!patientDetails?.patient.id) {
-      throw new Error('患者 ID が取得できません');
-    }
-
-    const response = await addCommentAction(content, patientDetails.patient.id, accountId, accountName);
-
-    if (response.success) {
-      setPatientDetails((prevState) => {
-        if (prevState) {
-          // 新评论添加到列表后重新排序
-          const updatedComments = [...prevState.comments, response.comment];
-          updatedComments.sort((a: Comment, b: Comment) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-          return {
-            ...prevState,
-            comments: updatedComments,
-          };
-        }
-        return prevState;
-      });
-    } else {
-      alert('コメント追加エラー');
-    }
-  } catch (error) {
-    alert('コメント追加时エラー発生');
-  } finally {
-    setIsProcessing(false);
-  }
-};
+  };
 
   if (loading) {
-    return <div>加载患者详情中...</div>;
+    return <div>患者詳細を読み込み中...</div>;
   }
 
   if (error) {
@@ -182,7 +180,7 @@ const addComment = async (content: string) => {
   }
 
   if (!patientDetails) {
-    return <div>未找到患者信息。</div>;
+    return <div>患者情報が見つかりません。</div>;
   }
 
   const { patient, comments } = patientDetails;
@@ -198,7 +196,7 @@ const addComment = async (content: string) => {
       </Link>
       <div className="mb-6">
         <div className="flex items-center">
-          {/* 用户头像 */}
+          {/* ユーザーアバター */}
           <svg width="64px" height="64px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="mr-4">
             <path d="M12 2.5a5.5 5.5 0 00-3.096 10.047 9.005 9.005 0 00-5.9 8.18.75.75 0 001.5.045 7.5 7.5 0 0114.993 0 .75.75 0 101.499-.044 9.005 9.005 0 00-5.9-8.181A5.5 5.5 0 0012 2.5zM8 8a4 4 0 118 0 4 4 0 01-8 0z" />
           </svg>
@@ -225,12 +223,12 @@ const addComment = async (content: string) => {
               alert('コメントのリフレッシュエラー');
             }
           } catch (error) {
-            alert('コメントのリフレッシュ时エラー発生');
+            alert('コメントのリフレッシュ中にエラーが発生しました');
           } finally {
             setLoading(false);
           }
         }}
-        isEditingFlag={isEditingFlag} // 传递 isEditingFlag
+        isEditingFlag={isEditingFlag} // isEditingFlag を渡す
       />
     </div>
   );

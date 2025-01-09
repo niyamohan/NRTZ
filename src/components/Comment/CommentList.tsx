@@ -6,15 +6,15 @@ import CommentInput from './CommentInput';
 import { z } from 'zod';
 import { CommentSchemas } from '@/schemas/commentSchemas';
 
-// 评论列表 Props 数据的 Schema
+// コメントリスト Props の Schema
 export const CommentListPropsSchema = z.object({
-  comments: z.array(CommentSchemas).nullable(), // 评论列表，数组类型，可以为空
-  isEditingFlag: z.boolean(), // 是否在编辑状态，布尔类型
-  isProcessing: z.boolean(), // 是否正在处理，布尔类型
-  refreshComments: z.function().returns(z.promise(z.void())), // 刷新评论的函数，返回 Promise
-  deleteComment: z.function().args(z.number()).returns(z.promise(z.void())), // 删除评论的函数，接受评论 ID 参数并返回 Promise
-  editComment: z.function().args(z.number(), z.string()).returns(z.promise(z.void())), // 编辑评论的函数，接受评论 ID 和内容参数并返回 Promise
-  addComment: z.function().args(z.string()).returns(z.promise(z.void())), // 新增评论的函数，接受评论内容参数并返回 Promise
+  comments: z.array(CommentSchemas).nullable(), // コメントリスト、配列タイプ、null可能
+  isEditingFlag: z.boolean(), // 編集中かどうか、ブール型
+  isProcessing: z.boolean(), // 処理中かどうか、ブール型
+  refreshComments: z.function().returns(z.promise(z.void())), // コメントをリフレッシュする関数、Promiseを返す
+  deleteComment: z.function().args(z.number()).returns(z.promise(z.void())), // コメントを削除する関数、コメントIDを受け取りPromiseを返す
+  editComment: z.function().args(z.number(), z.string()).returns(z.promise(z.void())), // コメントを編集する関数、IDと内容を受け取りPromiseを返す
+  addComment: z.function().args(z.string()).returns(z.promise(z.void())), // 新しいコメントを追加する関数、内容を受け取りPromiseを返す
 });
 
 export type CommentListProps = z.infer<typeof CommentListPropsSchema>;
@@ -25,29 +25,28 @@ const CommentList = ({
   deleteComment,
   editComment,
   addComment,
-  refreshComments,  // 添加 refreshComments
+  refreshComments, // refreshComments を追加
 }: CommentListProps) => {
-
   return (
     <div className="space-y-4">
-      {/* 渲染评论列表 */}
+      {/* コメントリストをレンダリング */}
       {comments && comments.length > 0 ? (
         comments.map((comment, index) => (
           <CommentCard
-            key={ index } // 将 id 和 accountId 结合起来确保唯一性
+            key={index} // IDとaccountIdを組み合わせてユニークにする
             comment={comment}
             isEditingFlag={false}
             isProcessing={isProcessing}
             deleteComment={deleteComment}
             editComment={editComment}
-            refreshComments={refreshComments} // 传递 refreshComments
+            refreshComments={refreshComments} // refreshComments を渡す
           />
         ))
       ) : (
-        <p className="text-gray-500">暂无评论</p>
+        <p className="text-gray-500">コメントはありません</p>
       )}
 
-      {/* 渲染评论输入框 */}
+      {/* コメント入力フォームをレンダリング */}
       <CommentInput addComment={addComment} />
     </div>
   );

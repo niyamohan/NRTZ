@@ -17,8 +17,8 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ accounts, currentAcco
   };
 
   const handleAccountClick = (account: Account) => {
-    onChange(account);  // 更新选中的账户
-    setIsOpen(false);  // 关闭下拉框
+    onChange(account); // 選択されたアカウントを更新
+    setIsOpen(false); // ドロップダウンを閉じる
   };
 
   return (
@@ -33,7 +33,7 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ accounts, currentAcco
       {isOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-white border rounded-md shadow-lg z-10">
           {accounts.length === 0 ? (
-            <div className="px-4 py-2 text-gray-500">没有账户</div>
+            <div className="px-4 py-2 text-gray-500">アカウントがありません</div>
           ) : (
             accounts.map((account) => (
               <div

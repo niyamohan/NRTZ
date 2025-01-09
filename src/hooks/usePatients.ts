@@ -9,10 +9,10 @@ const usePatients = () => {
 
   useEffect(() => {
     async function fetchPatients() {
-      setLoading(true); // 开始加载
+      setLoading(true); 
 
       try {
-        const response = await getAllPatientsAction(); // 调用你的getAllPatientsAction函数
+        const response = await getAllPatientsAction(); // getAllPatientsAction函数
         if (response.success) {
           setPatients(response.patients);
         } else {
@@ -21,7 +21,7 @@ const usePatients = () => {
       } catch (error) {
         setError("Error fetching patients");
       } finally {
-        setLoading(false); // 加载结束
+        setLoading(false); 
       }
     }
 

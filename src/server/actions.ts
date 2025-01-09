@@ -4,8 +4,7 @@ import { accountsDb } from "@/db/accountDataAccess";
 import { commentsDb } from "@/db/commentDataAccess";
 import { patientsDb } from "@/db/patientDataAccess";
 
-
-// -------------------------------------ACTION查询所有账户start-------------------------------------
+// -------------------------------------ACTIONすべてのアカウントを取得開始-------------------------------------
 export async function getAllAccountsAction() {
     'use server'
 
@@ -21,10 +20,9 @@ export async function getAllAccountsAction() {
         accounts,
     }
 }
-// -------------------------------------ACTION查询所有账户end-------------------------------------
+// -------------------------------------ACTIONすべてのアカウントを取得終了-------------------------------------
 
-
-// -------------------------------------ACTION查询所有病人start-------------------------------------
+// -------------------------------------ACTIONすべての患者を取得開始-------------------------------------
 export async function getAllPatientsAction() {
     'use server'
 
@@ -40,9 +38,9 @@ export async function getAllPatientsAction() {
         patients,
     }
 }
-// -------------------------------------ACTION查询所有病人end----------------------------------------------
+// -------------------------------------ACTIONすべての患者を取得終了----------------------------------------------
 
-// -------------------------------------ACTION 查询所有评论 start -------------------------------------
+// -------------------------------------ACTION すべてのコメントを取得開始 -------------------------------------
 export async function getAllCommentsByPatientIdAction(patientId: string) {
     'use server'
 
@@ -59,9 +57,9 @@ export async function getAllCommentsByPatientIdAction(patientId: string) {
         comments: commentsData.comments,
     };
 }
-// -------------------------------------ACTION 查询所有评论 end -----------------------------------------
+// -------------------------------------ACTION すべてのコメントを取得終了 -----------------------------------------
 
-// -------------------------------------ACTION 删除评论 start -------------------------------------
+// -------------------------------------ACTION コメント削除開始 -------------------------------------
 export async function deleteCommentAction(commentId: number) {
     'use server'
 
@@ -78,9 +76,9 @@ export async function deleteCommentAction(commentId: number) {
         };
     }
 }
-// -------------------------------------ACTION 删除评论 end -----------------------------------------
+// -------------------------------------ACTION コメント削除終了 -----------------------------------------
 
-// -------------------------------------ACTION 更新评论 start -------------------------------------
+// -------------------------------------ACTION コメント更新開始 -------------------------------------
 export async function updateCommentAction(commentId: number, newContent: string) {
     'use server'
 
@@ -105,9 +103,9 @@ export async function updateCommentAction(commentId: number, newContent: string)
         };
     }
 }
-// -------------------------------------ACTION 更新コメント end -----------------------------------------
+// -------------------------------------ACTION コメント更新終了 -----------------------------------------
 
-// -------------------------------------ACTION コメント追加 start -------------------------------------
+// -------------------------------------ACTION コメント追加開始 -------------------------------------
 export async function addCommentAction(content: string, patientId: number, accountId: number, accountName: string) {
     'use server';
   
@@ -126,4 +124,4 @@ export async function addCommentAction(content: string, patientId: number, accou
       };
     }
   }
-  // -------------------------------------ACTION コメント追加 end -------------------------------------
+// -------------------------------------ACTION コメント追加終了 -------------------------------------

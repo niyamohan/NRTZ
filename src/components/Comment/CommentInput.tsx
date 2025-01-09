@@ -12,7 +12,7 @@ const CommentInput = ({ addComment }: CommentInputProps) => {
   const handleAddComment = () => {
     if (newComment.trim()) {
       addComment(newComment);
-      setNewComment(''); // 提交后清空输入框
+      setNewComment(''); // 投稿後に入力フィールドをクリア
     }
   };
 
@@ -22,7 +22,7 @@ const CommentInput = ({ addComment }: CommentInputProps) => {
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
         className="w-full p-2 border rounded-md"
-        placeholder="新しいコメントを投稿..."
+        placeholder="コメントを入力してください..."
       />
       <div className="flex justify-end">
         <button

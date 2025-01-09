@@ -18,7 +18,7 @@ const accountSlice = createSlice({
     setAccounts: (state, action: PayloadAction<Account[]>) => {
       state.accounts = action.payload;
       if (!state.selectedAccount && state.accounts.length > 0) {
-        state.selectedAccount = state.accounts[0]; // 默认选第一个账户
+        state.selectedAccount = state.accounts[0]; // 最初のアカウントを選択する
       }
     },
     setSelectedAccount: (state, action: PayloadAction<Account>) => {

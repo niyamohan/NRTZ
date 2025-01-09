@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-// 病人コメントスキーマ
+// コメントスキーマ
 export const CommentSchemas = z.object({
-  id: z.number().nonnegative({ message: 'コメントIDは正の整数である必要があります。' }), // 数字类型
+  id: z.number().nonnegative({ message: 'コメントIDは正の整数である必要があります。' }), 
   content: z.string().nonempty({ message: 'コメントは必須項目です。' }),
   patientId: z.number().nonnegative({ message: '患者IDは正の整数である必要があります。' }),
   accountId: z.number().nonnegative({ message: 'アカウントIDは正の整数である必要があります。' }),
@@ -11,5 +11,5 @@ export const CommentSchemas = z.object({
   updatedAt: z.string().nonempty({ message: '更新日時は必須項目です。' }),
 });
 
-// type 病人コメント
+// type コメント
 export type Comment = z.infer<typeof CommentSchemas>;

@@ -6,17 +6,17 @@ import { RootState } from '@/redux/store/store';
 import { useSelector } from 'react-redux';
 import { CommentSchemas } from '@/schemas/commentSchemas';
 
-// 评论 Props 数据的 Schema
+// コメント Props データの Schema
 export const CommentCardPropsSchema = z.object({
-  comment: CommentSchemas, // 评论对象，类型是 CommentSchema
-  isEditingFlag: z.boolean(), // 是否在编辑状态，布尔类型
-  isProcessing: z.boolean(), // 是否正在处理，布尔类型
-  refreshComments: z.function().returns(z.promise(z.void())), // 刷新评论的函数，返回 Promise
-  deleteComment: z.function().args(z.number()).returns(z.promise(z.void())), // 删除评论的函数，接受评论 ID 参数并返回 Promise
-  editComment: z.function().args(z.number(), z.string()).returns(z.promise(z.void())), // 编辑评论的函数，接受评论 ID 和内容参数并返回 Promise
+  comment: CommentSchemas, // コメントオブジェクト、型は CommentSchema
+  isEditingFlag: z.boolean(), // 編集中かどうか、ブール型
+  isProcessing: z.boolean(), // 処理中かどうか、ブール型
+  refreshComments: z.function().returns(z.promise(z.void())), // コメントをリフレッシュする関数、Promiseを返す
+  deleteComment: z.function().args(z.number()).returns(z.promise(z.void())), // コメントを削除する関数、コメントIDを受け取りPromiseを返す
+  editComment: z.function().args(z.number(), z.string()).returns(z.promise(z.void())), // コメントを編集する関数、コメントIDと内容を受け取りPromiseを返す
 });
 
-// 用 CommentCardPropsSchema 推导出 CommentCardProps 类型
+// CommentCardPropsSchema から CommentCardProps 型を推論
 export type CommentCardProps = z.infer<typeof CommentCardPropsSchema>;
 
 const CommentCard = ({ comment, isEditingFlag, isProcessing, deleteComment, editComment, refreshComments }: CommentCardProps) => {

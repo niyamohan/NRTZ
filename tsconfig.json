@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2017", // 编译目标版本
+    "target": "ES2017", // コンパイルターゲットバージョン
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true, // 允许编译 JavaScript 文件
-    "skipLibCheck": true, // 跳过库文件检查
-    "strict": true, // 开启严格类型检查
-    "noEmit": true, // 不输出编译结果（在 Next.js 中通过 babel 进行编译）
-    "incremental": true, // 启用增量编译
-    "module": "ESNext", // 使用 ESNext 模块系统
-    "esModuleInterop": true, // 允许默认导入非 ES6 模块
-    "moduleResolution": "node", // 使用 Node.js 模块解析策略
-    "resolveJsonModule": true, // 支持导入 JSON 模块
-    "isolatedModules": true, // 每个文件作为独立模块处理
-    "jsx": "preserve", // 使用 React 17 新的 JSX 转换方式
+    "allowJs": true, // JavaScript ファイルを許可する
+    "skipLibCheck": true, // ライブラリファイルのチェックをスキップする
+    "strict": true, // 厳密な型チェックを有効にする
+    "noEmit": true, // コンパイル結果を出力しない（Next.jsではbabelでコンパイルする）
+    "incremental": true, // 増分コンパイルを有効にする
+    "module": "ESNext", // ESNextモジュールシステムを使用する
+    "esModuleInterop": true, // デフォルトで非ES6モジュールをインポートできるようにする
+    "moduleResolution": "node", // Node.jsのモジュール解析戦略を使用する
+    "resolveJsonModule": true, // JSONモジュールのインポートをサポートする
+    "isolatedModules": true, // 各ファイルを独立したモジュールとして処理する
+    "jsx": "preserve", // React 17の新しいJSX変換方式を使用する
     "plugins": [
       {
         "name": "next"
@@ -28,12 +28,12 @@
     }
   },
   "include": [
-    "next-env.d.ts", // 引入 Next.js 环境类型声明
-    ".next/types/**/*.ts", // Next.js 内部生成的类型声明
-    "**/*.ts", // 包含所有 TypeScript 文件
-    "**/*.tsx" // 包含所有 TypeScript JSX 文件
+    "next-env.d.ts", // Next.js環境型宣言を取り込む
+    ".next/types/**/*.ts", // Next.js内部生成型宣言を含む
+    "**/*.ts", // すべてのTypeScriptファイルを含む
+    "**/*.tsx" // すべてのTypeScript JSXファイルを含む
   ],
   "exclude": [
-    "node_modules" // 排除 node_modules 目录
+    "node_modules" // node_modulesディレクトリを除外する
   ]
 }

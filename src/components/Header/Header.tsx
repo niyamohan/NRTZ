@@ -1,58 +1,63 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";  // 使用 Redux hooks
-import { setAccounts, setSelectedAccount } from "@/redux/slices/accountSlice";  // 引入 Redux actions
-import AccountSelector from "@/components/Header/AccountSelector";  // 假设这是选择账户的下拉组件
+import { useDispatch, useSelector } from "react-redux"; // Redux フックを使用
+import { setAccounts, setSelectedAccount } from "@/redux/slices/accountSlice"; // Redux アクションをインポート
+import AccountSelector from "@/components/Header/AccountSelector"; // アカウント選択用のドロップダウンコンポーネント
 import { Account } from "@/schemas/accountSchemas";
-import { getAllAccountsAction } from "@/server/actions";  // 使用 action 来获取账户数据
+import { getAllAccountsAction } from "@/server/actions"; // アカウントデータを取得するアクション
 
 export default function Header() {
   const dispatch = useDispatch();
-  const { selectedAccount } = useSelector((state: any) => state.account);  // 从 Redux 获取当前选中的账户
-  const accounts = useSelector((state: any) => state.account.accounts);  // 从 Redux 获取所有账户
-  const [isLoading, setIsLoading] = useState(true);  // 加载状态
 
-  // 获取账户的异步函数
+  // Redux ストアからアカウントの状態を取得
+  const { selectedAccount } = useSelector((state: any) => state.account); // 現在選択中のアカウント
+  const accounts = useSelector((state: any) => state.account.accounts); // すべてのアカウントリスト
+
+  const [isLoading, setIsLoading] = useState(true); // ローディング状態
+
+  // アカウントデータを取得する非同期関数
   const fetchAccounts = useCallback(async () => {
     try {
       const result = await getAllAccountsAction();
       if (result.error) {
         throw new Error(result.error);
       }
-      if (result.accounts !== undefined) { // 检查是否为 undefined
-        dispatch(setAccounts(result.accounts));  // 更新 Redux store 中的账户数据
+
+      if (result.accounts !== undefined) { // undefined でないか確認
+        dispatch(setAccounts(result.accounts)); // Redux ストア内のアカウントデータを更新
       }
 
-      // 如果没有选中的账户，则默认选中第一个账户
-      if (result.accounts !== undefined && !selectedAccount && result.accounts.length > 0) { // 检查 result.accounts 是否有长度
-        dispatch(setSelectedAccount(result.accounts[0]));  // 默认选中第一个账户
+      // 選択されたアカウントがない場合はデフォルトで最初のアカウントを選択
+      if (result.accounts !== undefined && !selectedAccount && result.accounts.length > 0) { // アカウントリストの長さを確認
+        dispatch(setSelectedAccount(result.accounts[0])); // デフォルトで最初のアカウントを選択
       }
+
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching accounts:", error);
       setIsLoading(false);
     }
   }, [dispatch, selectedAccount]);
 
+  // コンポーネントがマウントされたときにアカウントデータを取得
   useEffect(() => {
-    fetchAccounts();  // 当组件挂载时获取账户数据
+    fetchAccounts();
   }, [fetchAccounts]);
 
-  // 当账户变化时，更新选中的账户
+  // アカウントが変更された際に選択を更新
   const handleAccountChange = (account: Account) => {
-    dispatch(setSelectedAccount(account));  // 更新当前选中的账户
+    dispatch(setSelectedAccount(account)); // 現在選択中のアカウントを更新
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>読み込み中...</div>;
   }
 
   return (
     <header className="flex items-center justify-between p-4 bg-gray-200">
       <div className="text-lg font-bold"></div>
       
-      {/* 传递账户数据、当前选中的账户、以及账户变更处理函数给 AccountSelector */}
+      {/* アカウントデータ、現在選択中のアカウント、アカウント変更処理関数を AccountSelector に渡す */}
       <AccountSelector
         accounts={accounts}
         currentAccount={selectedAccount}
